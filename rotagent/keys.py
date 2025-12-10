@@ -2,6 +2,7 @@ import os
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 
+
 class KeyManager:
     @staticmethod
     def generate_rsa_keypair():
@@ -11,13 +12,17 @@ class KeyManager:
         private_pem = private_key.private_bytes(
             encoding=serialization.Encoding.PEM,
             format=serialization.PrivateFormat.PKCS8,
-            encryption_algorithm=serialization.NoEncryption()
-        ).decode('utf-8')
+            encryption_algorithm=serialization.NoEncryption(),
+        ).decode("utf-8")
 
-        public_pem = private_key.public_key().public_bytes(
-            encoding=serialization.Encoding.PEM,
-            format=serialization.PublicFormat.SubjectPublicKeyInfo
-        ).decode('utf-8')
+        public_pem = (
+            private_key.public_key()
+            .public_bytes(
+                encoding=serialization.Encoding.PEM,
+                format=serialization.PublicFormat.SubjectPublicKeyInfo,
+            )
+            .decode("utf-8")
+        )
 
         return private_pem, public_pem
 
@@ -30,11 +35,11 @@ class KeyManager:
             return key_map
 
         for filename in os.listdir(directory):
-            if filename.endswith(('.pem', '.pub', '.key')):
+            if filename.endswith((".pem", ".pub", ".key")):
                 issuer_id = os.path.splitext(filename)[0]
                 file_path = os.path.join(directory, filename)
                 try:
-                    with open(file_path, 'r') as f:
+                    with open(file_path, "r") as f:
                         content = f.read().strip()
                         if "-----BEGIN PUBLIC KEY-----" in content:
                             key_map[issuer_id] = content

@@ -18,14 +18,14 @@ class AgentAuth:
         # 1. Default Logic for Keys Directory
         if keys_dir is None:
             # Defaults to 'authorized_keys' in the current running directory
-            self.keys_dir = os.path.join(os.getcwd(), 'authorized_keys')
+            self.keys_dir = os.path.join(os.getcwd(), "authorized_keys")
         else:
             self.keys_dir = keys_dir
 
         # 2. Default Logic for Dev Mode
         if dev_mode is None:
             # automatically check environment variable
-            self.dev_mode = os.getenv('APP_ENV', 'production') == 'development'
+            self.dev_mode = os.getenv("APP_ENV", "production") == "development"
         else:
             self.dev_mode = dev_mode
 
@@ -49,7 +49,7 @@ class AgentAuth:
     def require_auth(self, f):
         @wraps(f)
         def decorated(*args, **kwargs):
-            auth_header = request.headers.get('Authorization')
+            auth_header = request.headers.get("Authorization")
             if not auth_header or not auth_header.startswith("Bearer "):
                 return jsonify({"error": "Missing/Invalid Authorization header"}), 401
 
@@ -58,7 +58,7 @@ class AgentAuth:
             try:
                 # 1. Identify Issuer
                 unverified = jwt.decode(token, options={"verify_signature": False})
-                issuer = unverified.get('iss')
+                issuer = unverified.get("iss")
 
                 if issuer not in self.trusted_keys:
                     # Hot-reload check in case user dropped a file while running
@@ -73,8 +73,8 @@ class AgentAuth:
 
                 # 3. Security Checks (Skip in Dev)
                 if not self.dev_mode:
-                    jti = payload.get('jti')
-                    exp = payload.get('exp')
+                    jti = payload.get("jti")
+                    exp = payload.get("exp")
 
                     if not jti or not exp:
                         return jsonify({"error": "Invalid Claims"}), 401
@@ -86,7 +86,7 @@ class AgentAuth:
 
                     # Integrity Check
                     received_hash = hashlib.sha256(request.get_data()).hexdigest()
-                    if received_hash != payload.get('content_sha256'):
+                    if received_hash != payload.get("content_sha256"):
                         return jsonify({"error": "Body Tampering Detected"}), 401
 
             except jwt.ExpiredSignatureError:

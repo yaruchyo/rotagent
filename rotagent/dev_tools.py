@@ -36,7 +36,7 @@ class DevTools:
 
         # 4. Format Private Key for .env (Base64 encoded to fit one line)
         # Convert PEM string back to bytes for b64 encoding
-        b64_private = base64.b64encode(private_pem.encode('utf-8')).decode('utf-8')
+        b64_private = base64.b64encode(private_pem.encode("utf-8")).decode("utf-8")
 
         print("\n" + "=" * 60)
         print("ACTION REQUIRED: UPDATE YOUR .ENV FILE")
@@ -65,9 +65,7 @@ class DevTools:
             private_key_bytes = base64.b64decode(b64_private_key)
 
             # Load private key object
-            private_key = serialization.load_pem_private_key(
-                private_key_bytes, password=None
-            )
+            private_key = serialization.load_pem_private_key(private_key_bytes, password=None)
         except Exception as e:
             print(f"❌ Error decoding private key: {e}")
             return
@@ -75,7 +73,7 @@ class DevTools:
         # Prepare Payload
         body_data = {"query": query}
         # Separators removes spaces for consistent hashing
-        json_body = json.dumps(body_data, separators=(',', ':'))
+        json_body = json.dumps(body_data, separators=(",", ":"))
         body_hash = hashlib.sha256(json_body.encode()).hexdigest()
 
         # Create Token
@@ -85,7 +83,7 @@ class DevTools:
             "iat": current_time,
             "exp": current_time + (6 * 3600),  # 6 hours
             "jti": uuid.uuid4().hex,
-            "content_sha256": body_hash
+            "content_sha256": body_hash,
         }
 
         token = jwt.encode(claims, private_key, algorithm="RS256")
