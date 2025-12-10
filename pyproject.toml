@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rotagent"
+version = "0.1.0"
+description = "Agent authentication and orchestrator client utilities for secure multi-agent communication"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Oleg Yaruchyk", email = "yaruchyk.o@gmail.com"}
+]
+keywords = ["orchestrator", "agent", "authentication", "jwt", "security", "multi-agent"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "flask>=2.0.0",
+    "PyJWT>=2.0.0",
+    "aiohttp>=3.8.0",
+    "cryptography>=3.4.0",
+    "python-dotenv>=0.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.20.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yaruchyo/rotagent"
+Repository = "https://github.com/yaruchyo/rotagent"
+Documentation = "https://github.com/yaruchyo/rotagent#readme"
+Issues = "https://github.com/yaruchyo/rotagent/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rotagent*"]
+
+[tool.setuptools.package-data]
+rotagent = ["py.typed"]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
